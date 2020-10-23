@@ -32,7 +32,7 @@ function logStatus(currentDir, newStatus) {
     R.map( function mapParam([tabName, clientType, campaignName]) {
       return [clientType, campaignName, newStatus];
     }),
-    R.map(
+    R.forEach(
       R.pipe(
         R.apply( getParams ),
         R.partialRight( logDirection(title), [Helpers])
