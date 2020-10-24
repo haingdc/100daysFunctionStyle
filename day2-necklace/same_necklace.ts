@@ -44,3 +44,16 @@ function listify(listOrItem) {
   }
   return listOrItem;
 }
+
+export function same_necklace_imperative_way(str1: string, str2: string) {
+  if (str1.length != str2.length) {
+    return false;
+  }
+  for (var i = 0; i < str1.length; i++) {
+    if (str1 === str2) {
+      return true;
+    }
+    str1 = swapString(str1)
+  }
+  return false;
+}
