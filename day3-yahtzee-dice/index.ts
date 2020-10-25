@@ -6,4 +6,4 @@ const log = console.log.bind(console);
 R.pipe(
   yahtzee,
   log,
-)([2, 3, 5, 5, 6]);
+)([2, 3, 5, 5, 6]); // => 10
