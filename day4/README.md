@@ -1,0 +1,1 @@
+start: clear && deno run -c tsconfig.json ./day4/index.ts
