@@ -13,7 +13,7 @@
         "-A",
         "-c",
         "tsconfig.json",
-        "./day2-necklace/index.ts"
+        "./day5-filter-beans/index.ts"
         // "${file}"
       ],
       "outputCapture": "std",
