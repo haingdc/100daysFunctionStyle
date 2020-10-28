@@ -44,13 +44,14 @@ export function filterTo(predicates: Function[], list: any[]) {
 
   // @ts-ignore
   function reducer(acc, item) {
+    // console.log('\nhere', acc, item);
     return acc;
   }
 
   var makeKeepFilterInFns = predicates.map((fn, i) => keepFilterIn(i, fn));
-//   var [keepCorns, keepCauliflower, keepOthers] = makeKeepFilterInFns;
-//   var allInOne = keepCorns( keepCauliflower( keepOthers( reducer ) ) )
+  var [keepCorns, keepCauliflower] = makeKeepFilterInFns;
+  var allInOne = keepCorns( keepCauliflower( reducer ) );
 
-  var allInOne = R.compose(...makeKeepFilterInFns, reducer);
-  return list.reduce(allInOne(), groups);
+  // var allInOne = R.compose(...makeKeepFilterInFns, reducer)();
+  return list.reduce(allInOne, groups);
 }

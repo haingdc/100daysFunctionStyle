@@ -42,3 +42,9 @@ Deno.test('edge case: empty array', () => {
   assertEquals(cauliFlowers.length, 0);
   assertEquals(others.length, 0);
 });
+
+Deno.test('edge case: no predicate to remain', () => {
+  var groups = filterTo([isCorn, isCauliflower], seeds);
+  var [corns, cauliFlowers] = groups;
+  assertEquals(groups.length, 2);
+});
