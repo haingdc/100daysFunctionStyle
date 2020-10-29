@@ -19,6 +19,7 @@ function isMango(i: string) {
 Deno.test('filter beans', () => {
   var [corns, cauliFlowers, others] = filterTo([isCorn, isCauliflower, R.identity], seeds);
   assertEquals(corns[0], '🌽');
+  assertEquals(corns[1], '🌽');
   assertEquals(cauliFlowers[0], '🥦');
   assertEquals(others[0], '🥬');
   assertEquals(others[1], '🍇');
@@ -47,4 +48,20 @@ Deno.test('edge case: no predicate to remain', () => {
   var groups = filterTo([isCorn, isCauliflower], seeds);
   var [corns, cauliFlowers] = groups;
   assertEquals(groups.length, 2);
+});
+
+Deno.test('compose predicate and map', () => {
+  function makeSeedXmen(s: string) {
+    console.log(s, 'double seed........');
+    return s + s;
+  }
+  var groups = filterTo([isCorn, isCauliflower, R.identity], seeds);
+  var [corns, cauliFlowers, others] = groups;
+  corns = corns.map(makeSeedXmen);
+  assertEquals(corns[0], '🌽🌽');
+  assertEquals(corns[1], '🌽🌽');
+  assertEquals(cauliFlowers[0], '🥦');
+  assertEquals(others[0], '🥬');
+  assertEquals(others[1], '🍇');
+  assertEquals(others[2], '🍒');
 });

@@ -49,9 +49,9 @@ export function filterTo(predicates: Function[], list: any[]) {
   }
 
   var makeKeepFilterInFns = predicates.map((fn, i) => keepFilterIn(i, fn));
-  var [keepCorns, keepCauliflower] = makeKeepFilterInFns;
-  var allInOne = keepCorns( keepCauliflower( reducer ) );
+  // var [keepCorns, keepCauliflower] = makeKeepFilterInFns;
+  // var allInOne = keepCorns( keepCauliflower( reducer ) );
 
-  // var allInOne = R.compose(...makeKeepFilterInFns, reducer)();
+  var allInOne = R.compose(...makeKeepFilterInFns, reducer)();
   return list.reduce(allInOne, groups);
 }
