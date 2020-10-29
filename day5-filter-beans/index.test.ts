@@ -57,7 +57,7 @@ Deno.test('compose predicate and map', () => {
   }
   var groups = filterTo([isCorn, isCauliflower, R.identity], seeds);
   var [corns, cauliFlowers, others] = groups;
-  corns = corns.map(makeSeedXmen);
+  corns = corns.map(makeSeedXmen);  // have to have another iterate
   assertEquals(corns[0], '🌽🌽');
   assertEquals(corns[1], '🌽🌽');
   assertEquals(cauliFlowers[0], '🥦');

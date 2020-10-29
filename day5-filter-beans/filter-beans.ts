@@ -53,5 +53,6 @@ export function filterTo(predicates: Function[], list: any[]) {
   // var allInOne = keepCorns( keepCauliflower( reducer ) );
 
   var allInOne = R.compose(...makeKeepFilterInFns, reducer)();
+  // var allInOne = R.compose(...makeKeepFilterInFns, R.identity)();
   return list.reduce(allInOne, groups);
 }
