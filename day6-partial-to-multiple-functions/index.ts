@@ -31,3 +31,17 @@ var [dual007, trio007, quad007] = R.map(function (fn) {
 console.log(dual007('_'));
 console.log(trio007('_', '_'));
 console.log(quad007('_', '_', '_'));
+
+
+
+var [dualFilms, trioFilms, quadFilms] = R.map(
+  R.pipe( R.partialRight, R.unary )( R.partial, [[ 'Dr.No', 'From Russia with Love' ]] )
+)
+( [ dual, trio, quad ] );
+
+console.log( dualFilms() );
+console.log( trioFilms('Goldfinger') );
+console.log( quadFilms('Goldfinger', 'Thunderball') );
+
+
+
