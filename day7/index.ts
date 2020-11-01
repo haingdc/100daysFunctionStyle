@@ -26,4 +26,13 @@ if (is_FROM_be_start && is_TO_be_one_of_ends) {
   console.log('Nope');
 }
 
+function imperativeWay() {
+  if (FROM == 'Ha Noi' && places.includes(TO)) {
+    console.log('Hải đi từ Ha Noi tới một trong những thành phố đó')
+  } else {
+    console.log('Nope')
+  }
+}
+
+imperativeWay();
 
