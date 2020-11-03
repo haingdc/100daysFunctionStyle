@@ -17,15 +17,7 @@ var smorseDictionary = getSmorseDictionary();
 var split = R.invoker(1, 'split');
 
 function smorse(str: string, dictionary: { [key: string]: string }) {
-  // var smorseCodes = str.split('').map(function mapCharacterToSmorseCode(c) {
-  //   return smorseDictionary[c];
-  // });
-  // return smorseCodes.join('');
-
-  function toSmorseCode(c) {
-    return dictionary[c];
-  }
-
+  var toSmorseCode = R.flip(R.prop)(dictionary);
   return R.pipe(
     split(''),
     R.map(toSmorseCode),
