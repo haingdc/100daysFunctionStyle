@@ -26,3 +26,14 @@ function smorse(str: string, dictionary: { [key: string]: string }) {
 }
 console.log(smorseDictionary);
 console.log(smorse('sos', smorseDictionary));
+
+const countWords = (s: string): number =>
+  s.split(/\s+/g).filter(w => /[a-z0-9]/.test(w)).length;
+
+var text = await Deno.readTextFile('enable1.txt');
+// const count = countWords(text);
+// console.log(`I read ${count} words.`);
+
+var list = text.split('\N');
+list.map(s => smorse(s, smorseDictionary));
+
