@@ -25,15 +25,29 @@ function smorse(str: string, dictionary: { [key: string]: string }) {
   )(str);
 }
 console.log(smorseDictionary);
-console.log(smorse('sos', smorseDictionary));
 
-const countWords = (s: string): number =>
-  s.split(/\s+/g).filter(w => /[a-z0-9]/.test(w)).length;
+// example:
+// smorse('sos', smorseDictionary); // -> ...---...
+
 
 var text = await Deno.readTextFile('enable1.txt');
-// const count = countWords(text);
-// console.log(`I read ${count} words.`);
 
-var list = text.split('\N');
-list.map(s => smorse(s, smorseDictionary));
+var list = text.split('\n');
+var smorseCodes = list.map(s => smorse(s, smorseDictionary));
+
+
+var initialValue = { countDot: 0, countDash: 0 };
+var countCode = R.reduce(function counter(countRs, c) {
+  var { countDot, countDash } = countRs;
+  if (c === '.') {
+    countDot += 1;
+  } else if (c === '-') {
+    countDash += 1;
+  }
+  return { countDot, countDash }
+});
+
+var countCodes = R.reduce(countCode, initialValue);
+
+console.log( countCodes(smorseCodes) )
 
