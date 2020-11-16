@@ -33,11 +33,37 @@ var composeM = method => (...ms) => (
   const label = 'API call composition';  // a => Promise(b)
   const getUserById = id => id === 3 ?
     Promise.resolve({ name: 'Kurt', role: 'Author' }) :
-    undefined
-  ;  // b => Promise(c)
+    undefined ;
+
+  // b => Promise(c)
   const hasPermission = ({ role }) => (
     Promise.resolve(role === 'Author')
-  );  // Try to compose them. Warning: this will fail.
-  const authUser = compose(hasPermission, getUserById);  // Oops! Always false!
+  );
+
+  // Try to compose them. Warning: this will fail.
+  const authUser = compose(hasPermission, getUserById);
+
+  // Oops! Always false!
   authUser(3).then(trace(label));
+}
+
+
+{
+  const composePromises = composeM('then');
+  const label = 'API call composition';
+
+  // a => Promise(b)
+  const getUserById = id => id === 3 ?
+    Promise.resolve({ name: 'Kurt', role: 'Author' }) :
+    undefined
+  ;
+
+  // b => Promise(c)
+  const hasPermission = ({ role }) => (
+    Promise.resolve(role === 'Author')
+  );
+
+  // Compose the functions (this works!)
+  const authUser = composePromises(hasPermission, getUserById);
+  authUser(3).then(trace(label)); // true
 }
