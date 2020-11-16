@@ -29,6 +29,10 @@ var composeM = method => (...ms) => (
   ms.reduce((f, g) => x => g(x)[method](f))
 );
 
+var composeMap = (...ms) => (
+  ms.reduce((f, g) => x => g(x).map(f))
+);
+
 {
   const label = 'API call composition';  // a => Promise(b)
   const getUserById = id => id === 3 ?
@@ -66,4 +70,48 @@ var composeM = method => (...ms) => (
   // Compose the functions (this works!)
   const authUser = composePromises(hasPermission, getUserById);
   authUser(3).then(trace(label)); // true
+}
+
+{
+  var composePromises = (...ms) => (
+    ms.reduce((f, g) => x => g(x).then(f))
+  );
+  const label = 'Promise composition';
+  const g = n => Promise.resolve(n + 1);
+  const f = n => Promise.resolve(n * 2);
+  const h = composePromises(f, g);
+
+  h(20).then(trace(label)); // Promise composition: 42
+}
+
+{
+  const g = n => Id(n + 1);
+  const f = n => Id(n * 2);
+
+  var x = 20;
+  // Left identity
+  // unit(x).chain(f) ==== f(x)
+  trace('Id monad left identity')([
+    Id(x).chain(f),
+    f(x)
+  ]);
+  // Id monad left identity: Id(40), Id(40)
+
+  // Right identity
+  // m.chain(unit) ==== m
+  trace('Id monad right identity')([
+    // @ts-ignore
+    Id(x).chain(Id.of),
+    Id(x)
+  ]);
+  // Id monad right identity: Id(20), Id(20)  // Associativity
+
+  // Associativity
+  // m.chain(f).chain(g) ====
+  // m.chain(x => f(x).chain(g)  
+  trace('Id monad associativity')([
+    Id(x).chain(g).chain(f),
+    Id(x).chain(x => g(x).chain(f))
+  ]);
+  // Id monad associativity: Id(42), Id(42)
 }
