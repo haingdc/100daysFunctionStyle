@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "lib": ["esnext", "DOM"],
     "noImplicitAny": false,
     // "allowJs": false,
     // "allowUmdGlobalAccess": false,
