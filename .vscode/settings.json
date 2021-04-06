@@ -11,5 +11,6 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "denoland.vscode-deno",
   },
-  "deno.config": "../tsconfig.json"
+  "deno.config": "../tsconfig.json",
+  "deno.path": [ "deno/**" ]
 }
