@@ -1,4 +1,5 @@
 const {List} = require('immutable-ext')
+const _ = require('lodash');
 // Monoid = Semigroup + Identity
 
 const Product = x =>
@@ -35,14 +36,14 @@ const All = x =>
 
 All.empty = () => All(true)
 
-// const Intersection = x =>
-// ({
-//   x,
-//   concat: other =>
-//     Intersection(_.intersection(x, other.x))
-// })
+const Intersection = x =>
+({
+  x,
+  concat: other =>
+    Intersection(_.intersection(x, other.x))
+})
 
-// Intersection([1,2,3,4]).concat(Intersection([12,3,4,5]))
+Intersection([1,2,3,4]).concat(Intersection([12,3,4,5]))
 
 
 
