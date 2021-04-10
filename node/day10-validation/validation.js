@@ -2,7 +2,24 @@ const { List } = require('immutable-ext')
 const { Either } = require('./types')
 const { Right, Left } = Either;
 
-const isPresent = x => !!x
+const Validation  = run =>
+({
+  run,
+  concat: other =>
+    Validation( (key, x) => run(key, x).concat( other.run(key, x) ) )
+})
+
+const isEmail = Validation((key, x) =>
+  /@/.test(x)
+  ? Success(x)
+  : Fail([`${key} must be an email `])
+)
+
+const isPresent = Validation((key, x) =>
+  !!x
+  ? Success(x)
+  : Fail([`${key} needs to be present`])
+)
 
 const Success = x =>
 ({
@@ -24,14 +41,13 @@ const Fail = x =>
 
 const validate = (spec, obj) =>
   List(Object.keys(spec)).foldMap(key =>
-    spec[key]( obj[key] ) ?
-                            Success( [obj] )
-                          :
-                            Fail( [`${key} bad`] )
+    spec[key].run(key, obj[key])
   , Success( [obj] ))
 
-const validations = { name: isPresent, email: isPresent }
-const obj = { name: 'brian', email: 'brain@brian.com' }
+const validations = { name: isPresent, email: isPresent.concat(isEmail) }
+const obj = { name: '', email: '' }
 
-const res = validate(validations, obj)
-res.fold(console.log, console.log)
+/* Usage: */
+// const res = validate(validations, obj)
+// res.fold(console.error, console.log)
+module.exports = validate
