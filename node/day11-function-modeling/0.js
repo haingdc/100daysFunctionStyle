@@ -13,5 +13,8 @@ const Fn = run =>
     Fn( x => run(x).concat( other.run(x) ) )
 })
 
-const res = Fn(toUpper).concat( Fn(exclaim) ).run('FP sux')
+// const res = Fn(toUpper).concat( Fn(exclaim) ).map(x => x.slice(1)).run('FP sux')
+const res = Fn(toUpper).chain(
+                          upper => Fn(y => exclaim(upper) )
+                        ).run('hi')
 console.log(res)
