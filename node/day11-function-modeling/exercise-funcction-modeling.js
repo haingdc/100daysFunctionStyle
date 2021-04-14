@@ -10,7 +10,7 @@ const Endo = run =>
 Endo.empty = () => Endo(x => x)
 
 
-// Ex1: 
+// Ex1:
 // =========================
 
 const classToClassName = html =>
@@ -58,23 +58,32 @@ QUnit.test("Ex1", assert => {
 
 // Ex2: model a predicate function :: a -> Bool and give it contramap() and concat(). i.e. make the test work
 // =========================
-const Pred = undefined; // todo
+const Predicate = run =>
+({
+	run,
+	concat: function(other) {
+		return Predicate( x => run(x) && other.run(x) )
+	},
+	contramap: function(f) {
+		return Predicate( x => run( f(x) ) )
+	},
+})
 
 QUnit.test("Ex2: pred", assert => {
-	const p = Pred(x => x > 4).contramap(x => x.length).concat(Pred(x => x.startsWith('s')))
+	const p = Predicate(x => x > 4).contramap(x => x.length).concat(Predicate(x => x.startsWith('s')))
 	const result = ['scary', 'sally', 'sipped', 'the', 'soup'].filter(p.run)
 	assert.deepEqual(result, ["scary", "sally", 'sipped'])
 })
 
 
-// Ex3: 
+// Ex3:
 // =========================
 const extension = file => file.name.split('.')[1]
 
 const matchesAny = regex => str =>
     str.match(new RegExp(regex, 'ig'))
 
-const matchesAnyP = pattern => Pred(matchesAny(pattern)) // Pred(str => Bool)
+const matchesAnyP = pattern => Predicate(matchesAny(pattern)) // Pred(str => Bool)
 
 // TODO: rewrite using matchesAnyP. Take advantage of contramap and concat
 const ex3 = file =>
