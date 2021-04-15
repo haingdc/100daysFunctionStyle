@@ -87,7 +87,13 @@ const matchesAnyP = pattern => Predicate(matchesAny(pattern)) // Pred(str => Boo
 
 // TODO: rewrite using matchesAnyP. Take advantage of contramap and concat
 const ex3 = file =>
-	matchesAny('txt|md')(extension(file)) && matchesAny('functional')(file.contents)
+	// matchesAny('txt|md')(extension(file)) && matchesAny('functional')(file.contents)
+	matchesAnyP('txt|md').contramap(f => extension(f))
+	.concat
+	(
+		matchesAnyP('functional').contramap(f => f.contents)
+	)
+	.run(file)
 
 
 QUnit.test("Ex3", assert => {
