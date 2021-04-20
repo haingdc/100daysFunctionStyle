@@ -1,5 +1,11 @@
 {
   "dependencies": {
     "lodash": "^4.17.21"
+  },
+  "scripts": {
+    "test": "qunit monad-transformers.js"
+  },
+  "devDependencies": {
+    "qunit": "^2.15.0"
   }
 }
