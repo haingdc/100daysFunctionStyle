@@ -177,7 +177,9 @@ const ReaderTask = FnT(Task)
 
 // Use ReaderTask.ask to get the server for the postUrl
 const ex2 = id =>
-	fetch(postUrl(server, id)).map(x => x.data).map(JSON.parse) // <--- get the server variable from ReaderTask
+  ReaderTask.ask.chain(server =>
+    ReaderTask.lift(   fetch( postUrl(server, id) ) .map(x => x.data) .map(JSON.parse)  )
+  )
 
 QUnit.test("Ex2", assert => {
 	ex2(30)
