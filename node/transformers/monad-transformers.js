@@ -218,18 +218,23 @@ const Api2 = ({
 })
 
 // TODO: Rewrite ex3 using Api2
+// const ex3 = (user_id) =>
+// 	Api1.getFavoriteId(user_id)
+// 	.chain(epost_id =>
+// 		epost_id
+// 		.fold(
+// 			() => Task.of(Left()),
+// 			(post_id) => Api1.getPost(post_id)
+// 		)
+// 	)
+// 	.map(epost =>
+// 		 epost.map(post => post.title)
+// 	)
+
 const ex3 = (user_id) =>
-	Api1.getFavoriteId(user_id)
-	.chain(epost_id =>
-		epost_id
-		.fold(
-			() => Task.of(Left()),
-			(post_id) => Api1.getPost(post_id)
-		)
-	)
-	.map(epost =>
-		 epost.map(post => post.title)
-	)
+    Api2.getFavoriteId(user_id)
+    .chain(   post_id => Api2.getPost(post_id)   )
+    .map(        post => post.title              )
 
 QUnit.test("Ex3", assert => {
 	ex3(1)
