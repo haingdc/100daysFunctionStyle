@@ -137,14 +137,15 @@ const FnEither = FnT(Either)
 const {Right, Left} = Either
 
 // TODO: Use FnEither.ask to get the cfg and return the port
-const ex1 = () =>{}
+const ex1 = () =>
+  FnEither.ask.map(config => config.port)
 
 QUnit.test("Ex1", assert => {
 	const result = ex1(1).run({port: 8080}).fold(x => x, x => x)
 	assert.deepEqual(8080, result)
 })
 
-// Ex1a: 
+// Ex1a:
 // =========================
 const fakeDb = xs => ({find: (id) => Either.fromNullable(xs[id])})
 
@@ -152,7 +153,10 @@ const connectDb = port =>
     port === 8080 ? Right(fakeDb(['red', 'green', 'blue'])) : Left('failed to connect')
 
 // TODO: Use ex1 to get the port, connect to the db, and find the id
-const ex1a = id =>{}
+const ex1a = id =>
+  ex1()
+  .chain(     port => FnEither.lift( connectDb(port) )         )
+  .chain(     db   => FnEither.lift(   db.find( id )  )         )
 
 QUnit.test("Ex1a", assert => {
 	assert.deepEqual('green', ex1a(1).run({port: 8080}).fold(x => x, x => x))
