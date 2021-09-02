@@ -1,4 +1,3 @@
-type CompareFnType<T> = (a: T, b: T) => number;
 interface Setoid<Box, T> {
   equals(a: Box, compareFn: CompareFnType<T>): boolean;
 }
@@ -9,6 +8,8 @@ interface Ord<Box, T> extends Setoid<Box, T> {
   gt (a: Box, compareFn: CompareFnType<T>): boolean;
   gte(a: Box, compareFn: CompareFnType<T>): boolean;
 }
+
+type CompareFnType<T> = (a: T, b: T) => number;
 
 class Foo implements Ord<Foo, Foo> {
   name: string;
@@ -54,9 +55,9 @@ class Foo implements Ord<Foo, Foo> {
 
 export class Node<T extends Ord<T, T>> implements Ord<Node<T>, T> {
   data: T;
-  parent: Node<T>;
-  left: Node<T>;
-  right: Node<T>;
+  parent?: Node<T>;
+  left?: Node<T>;
+  right?: Node<T>;
 
   constructor(value: T) {
     this.data = value;
@@ -80,19 +81,23 @@ export class Node<T extends Ord<T, T>> implements Ord<Node<T>, T> {
 }
 
 export class BinarySearchTree<T extends Ord<T, T>> {
-  private root: Node<T>;
+  public root?: Node<T>;
   private compareFn: CompareFnType<T>;
 
   constructor(compareFn: CompareFnType<T>) {
     this.compareFn = compareFn;
   }
 
-  insert(value: T, root: Node<T>) {
+  insert(value: T, root?: Node<T>) {
     if(!root) {
-      root = new Node(value);
+      if(this.root) {
+        this.insert(value, this.root);
+        return;
+      }
+      this.root = new Node(value);;
       return;
     }
-    if(root.data.lt(value, this.compareFn)) {
+    if(root.data.gte(value, this.compareFn)) {
       if (!root.left) {
         root.left = new Node(value);
         root.left.parent = root;
@@ -101,7 +106,6 @@ export class BinarySearchTree<T extends Ord<T, T>> {
       this.insert(value, root.left);
       return;
     }
-    // if(root.data < value) {
     if(root.data.lt(value, this.compareFn)) {
       if(!root.right) {
         root.right = new Node(value);
@@ -113,22 +117,58 @@ export class BinarySearchTree<T extends Ord<T, T>> {
   }
 
   delete(node: Node<T>) {
+    if (this.root === node) {
+      this.deleteRoot();
+      return;
+    }
     if (!node.left && !node.right) {
-      delete node.parent.left;
+      if (node!.parent!.left === node) {
+        delete node!.parent!.left;
+      } else {
+        delete node!.parent!.right;
+      }
       return;
     }
     if (node.left && node.right) {
-      //todo
+      node!.parent!.right = node.right;
+      node.right.parent = node.parent;
+      node.right.left = node.left;
+      node.left.parent = node.right;
+      delete node.left; delete node.right; delete node.parent;
       return;
     }
     // only child deletion
-    if (node.parent.left == node) {
-      node.parent.left = node.left || node.right;
-      node.parent.left.parent = node.parent;
+    if (node!.parent!.left == node) {
+      node!.parent!.left = node.left || node.right;
+      node!.parent!.left!.parent = node.parent;
     } else {
-      node.parent.right = node.left || node.right;
-      node.parent.right.parent = node.parent;
+      node!.parent!.right = node.left || node.right;
+      node!.parent!.right!.parent = node.parent;
     }
     delete node.left; delete node.right; delete node.parent;
   }
+
+  deleteRoot() {}
 }
+
+
+var compareAge: CompareFnType<Foo> = (a: Foo, b: Foo) => {
+  return a.age - b.age;
+};
+
+var compareName: CompareFnType<Foo> = (a: Foo, b: Foo) => {
+  if (a.name > b.name) return 1;
+  if (a.name < b.name) return -1;
+  return 0;
+}
+
+var tree = new BinarySearchTree<Foo>(compareAge);
+tree.insert(new Foo('Bo', 65));
+tree.insert(new Foo('Tan', 31));
+tree.insert(new Foo('Phong', 30));
+tree.insert(new Foo('Linh', 30));
+tree.insert(new Foo('Me', 62));
+tree.insert(new Foo('Ong Ngoai', 93));
+console.log(tree);
+// tree.delete(root);
+// console.log(tree);
